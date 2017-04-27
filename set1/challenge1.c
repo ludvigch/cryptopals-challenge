@@ -2,7 +2,7 @@
 char* hexstr = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
 // converts six bit value to B64 represented in ascii
 char b64ToAsc(char sixbit){
-    if(sixbit == '\0')
+    if(sixbit < 0)
         return '\0';
     else if(sixbit <= 25)
         return sixbit+65;
@@ -34,7 +34,6 @@ void hexToB64(char* hexasc, char* storage){
         buffer = buffer << 4;
         buffer = buffer | ascToHex(hexasc[i]);
         if(i%6 == 5){
-            printf("buff: %d\n", buffer);
             int k;
             for(k=3; k>=0; k--){
                 storage[b64index + k] = 0x3f & buffer;
@@ -46,34 +45,11 @@ void hexToB64(char* hexasc, char* storage){
     }
 }
 
-void test(){
-    char fin[4];
-    char* buf = "49276d";
-    int i; int temp = 0;
-    temp |= (int) ascToHex(buf[0]);
-    for(i=1; i<6; i++){
-        temp = temp << 4;
-        temp |= (int) ascToHex(buf[i]);
-    }
-
-    printf("%d\n", temp);
-
-    for(i=3; i>=0; i--){
-        fin[i] = 0x3f & temp;
-        temp = temp >> 6;
-    }
-    for(i=3; i>=0; i--){
-        fin[i] = b64ToAsc(fin[i]);
-    }
-    printf("%s\n", fin);
-}
-
 int main(int argc, char const *argv[]) {
     int i;
     char yo[(strlen(hexstr)/3)*2];
     hexToB64(hexstr, yo);
 
-    //test();
     for(i=0; i<strlen(yo); i++){
         yo[i] = b64ToAsc(yo[i]);
     }
